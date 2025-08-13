@@ -14,6 +14,8 @@ export default {
 }
 ```
 
+To add Subresource Integrity hashes for built assets, use the [`build.sri`](/config/build-options.md#build-sri) option.
+
 Note Vite supports using ES modules syntax in the config file even if the project is not using native Node ESM, e.g. `"type": "module"` in `package.json`. In this case, the config file is auto pre-processed before load.
 
 You can also explicitly specify a config file to use with the `--config` CLI option (resolved relative to `cwd`):
