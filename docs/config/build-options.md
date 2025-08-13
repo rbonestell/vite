@@ -195,6 +195,42 @@ Whether to generate a manifest file that contains a mapping of non-hashed asset 
 
 When the value is a string, it will be used as the manifest file path relative to `build.outDir`. When set to `true`, the path would be `.vite/manifest.json`.
 
+## build.sri
+
+- **Type:** `boolean | BuildSriOptions`
+- **Default:** `false`
+- **Related:** [Subresource Integrity](https://developer.mozilla.org/docs/Web/Security/Subresource_Integrity)
+
+Generate Subresource Integrity hashes for files referenced by the built HTML. When set to `true`, Vite will hash each script and stylesheet and add an `integrity` attribute to the corresponding `<script>` and `<link rel="stylesheet">` tags.
+
+Passing an object lets you customize the hashing behaviour via the following properties:
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `algorithm` | `'sha256' | 'sha384' | 'sha512'` | `'sha384'` | Hash algorithm used to generate the integrity string. |
+| `crossorigin` | `'' | 'anonymous' | 'use-credentials'` | `'anonymous'` | Value for the accompanying `crossorigin` attribute. |
+| `preloadDynamicImports` | `boolean` | `true` | Whether to add integrity hashes to `<link rel="modulepreload">` tags for dynamic imports. |
+| `runtime` | `boolean` | `true` | Injects a helper that applies integrity attributes to modules loaded via dynamic `import()` at runtime. |
+
+Example:
+
+```js twoslash [vite.config.js]
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  build: {
+    // ---cut-start---
+    sri: {
+      algorithm: 'sha256',
+      crossorigin: 'use-credentials',
+      preloadDynamicImports: false,
+      runtime: false,
+    },
+    // ---cut-end---
+  },
+})
+```
+
 ## build.ssrManifest
 
 - **Type:** `boolean | string`
