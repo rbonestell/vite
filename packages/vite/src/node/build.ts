@@ -58,6 +58,7 @@ import { dataURIPlugin } from './plugins/dataUri'
 import { buildImportAnalysisPlugin } from './plugins/importAnalysisBuild'
 import { ssrManifestPlugin } from './ssr/ssrManifestPlugin'
 import { buildLoadFallbackPlugin } from './plugins/loadFallback'
+import { sriPlugin } from './plugins/sri'
 import { findNearestMainPackageData, findNearestPackageData } from './packages'
 import type { PackageCache } from './packages'
 import {
@@ -81,6 +82,17 @@ import {
 } from './deprecations'
 import { prepareOutDirPlugin } from './plugins/prepareOutDir'
 import type { Environment } from './environment'
+
+export interface BuildSriOptions {
+  /** Hash algorithm used for integrity calculation. Defaults to sha384 */
+  algorithm?: 'sha256' | 'sha384' | 'sha512'
+  /** Value for the crossorigin attribute on generated tags */
+  crossorigin?: 'anonymous' | 'use-credentials'
+  /** Whether to add modulepreload links for dynamic imports. Default true */
+  preloadDynamicImports?: boolean
+  /** Whether to inject a runtime to patch dynamic links/scripts. Default true */
+  runtime?: boolean
+}
 
 export interface BuildEnvironmentOptions {
   /**
@@ -276,6 +288,12 @@ export interface BuildEnvironmentOptions {
    */
   watch?: WatcherOptions | null
   /**
+   * Generate Subresource Integrity hashes for built assets.
+   * Set to an object to enable.
+   * @default false
+   */
+  sri?: false | BuildSriOptions
+  /**
    * create the Build Environment instance
    */
   createEnvironment?: (
@@ -389,6 +407,7 @@ export const buildEnvironmentOptionsDefaults = Object.freeze({
   reportCompressedSize: true,
   chunkSizeWarningLimit: 500,
   watch: null,
+  sri: false,
   // createEnvironment
 })
 
@@ -491,6 +510,7 @@ export async function resolveBuildPlugins(config: ResolvedConfig): Promise<{
       buildImportAnalysisPlugin(config),
       buildEsbuildPlugin(),
       terserPlugin(config),
+      ...(config.build.sri ? [sriPlugin(config)] : []),
       ...(!config.isWorker
         ? [manifestPlugin(), ssrManifestPlugin(), buildReporterPlugin(config)]
         : []),
