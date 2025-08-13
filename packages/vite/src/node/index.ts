@@ -123,6 +123,7 @@ export type {
   BuilderOptions,
   BuildOptions,
   BuildEnvironmentOptions,
+  BuildSriOptions,
   LibraryOptions,
   LibraryFormats,
   RenderBuiltAssetUrl,
