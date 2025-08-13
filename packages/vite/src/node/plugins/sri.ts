@@ -3,17 +3,7 @@ import { parse, serialize } from 'parse5'
 import type { OutputBundle } from 'rollup'
 import type { Plugin } from '../plugin'
 import type { ResolvedConfig } from '../config'
-
-export interface BuildSriOptions {
-  /** Hashing algorithm to use. Defaults to sha384 */
-  algorithm?: 'sha256' | 'sha384' | 'sha512'
-  /** Value for the crossorigin attribute on generated tags */
-  crossorigin?: 'anonymous' | 'use-credentials'
-  /** Inject modulepreload links for dynamically imported chunks. Default true */
-  preloadDynamicImports?: boolean
-  /** Inject a small runtime to set integrity on dynamic links/scripts. Default true */
-  runtime?: boolean
-}
+import type { BuildSriOptions } from '../build'
 
 export function sriPlugin(config: ResolvedConfig): Plugin {
   const options = (config.build.sri || {}) as BuildSriOptions
